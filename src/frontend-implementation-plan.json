@@ -1,0 +1,245 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "In-browser Photo Editor (Upload, Edit, Export, Optional II Presets)",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "summary": "Build a single-page photo editor UI with image upload, preview, and reset to original.",
+      "acceptanceCriteria": [
+        "User can upload a JPG/PNG/WebP image via file picker and see a preview",
+        "If the user uploads an unsupported file type, show an English error message and do not crash",
+        "Provide a clear ‘Reset’ action that restores the image to its original state"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/main.tsx",
+          "operation": "modify",
+          "description": "Fix CSS import to reference the existing global stylesheet (use frontend/index.css), and ensure the app mounts the single-page editor entry component."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "create",
+          "description": "Create the single-page editor shell (header + editor canvas preview + tools sidebar) including upload control, file type validation with English errors, preview rendering, and a prominent Reset action that restores the original image."
+        },
+        {
+          "path": "frontend/src/editor/types.ts",
+          "operation": "create",
+          "description": "Define TypeScript types for editor state (original image reference, current settings, history items) used across the editor UI and processing pipeline."
+        },
+        {
+          "path": "frontend/src/editor/utils/fileValidation.ts",
+          "operation": "create",
+          "description": "Implement client-side validation for allowed image MIME types (JPG/PNG/WebP) and friendly English error strings for unsupported uploads."
+        }
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "summary": "Implement core canvas-based editing tools: crop, rotate, flip, and basic adjustments with live preview and combinable edits.",
+      "acceptanceCriteria": [
+        "User can crop and confirm the crop, and the preview updates to the cropped result",
+        "User can rotate left/right by 90° and flip horizontally/vertically",
+        "User can adjust brightness/contrast/saturation with sliders and see changes immediately",
+        "Edits can be applied in combination (e.g., crop + rotate + brightness)"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/editor/processing/canvasPipeline.ts",
+          "operation": "create",
+          "description": "Create a canvas-based image processing pipeline that applies transforms (rotate 90° steps, flip H/V), adjustments (brightness/contrast/saturation), and crop in a deterministic order, producing a live preview on a canvas."
+        },
+        {
+          "path": "frontend/src/editor/hooks/useEditorState.ts",
+          "operation": "create",
+          "description": "Add a hook that manages the current editing settings (crop rect/ratio, rotation steps, flips, adjustment values) and exposes actions to update settings in a composable way."
+        },
+        {
+          "path": "frontend/src/editor/components/EditorCanvas.tsx",
+          "operation": "create",
+          "description": "Implement the preview surface using a canvas, rendering the current pipeline result and supporting responsive sizing for mobile/desktop."
+        },
+        {
+          "path": "frontend/src/editor/components/tools/AdjustmentsPanel.tsx",
+          "operation": "create",
+          "description": "Create brightness/contrast/saturation controls using shadcn-ui Slider components to provide immediate live preview updates. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/editor/components/tools/TransformPanel.tsx",
+          "operation": "create",
+          "description": "Create rotate left/right (90°) and flip horizontal/vertical actions using shadcn-ui Button components. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/editor/components/tools/CropPanel.tsx",
+          "operation": "create",
+          "description": "Implement crop UI with freeform selection and optional fixed ratios (e.g., Original, 1:1, 4:3, 16:9), with explicit Confirm/Cancel actions and preview updates after confirm."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the editor tool panels and canvas pipeline together so that crop/rotate/flip/adjustments can be applied in combination and reflected in the live preview."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Add export/download of the edited image with PNG/JPEG options and JPEG quality control.",
+      "acceptanceCriteria": [
+        "User can download the edited image as PNG",
+        "User can download the edited image as JPEG with a quality slider (or preset) that changes output size/quality",
+        "Downloaded file reflects all applied edits"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/editor/utils/exportImage.ts",
+          "operation": "create",
+          "description": "Implement export helpers that render the current pipeline to an export canvas and trigger download as PNG or JPEG; include JPEG quality parameter handling."
+        },
+        {
+          "path": "frontend/src/editor/components/ExportPanel.tsx",
+          "operation": "create",
+          "description": "Create an export UI with format selection (PNG/JPEG) and a JPEG quality slider/preset using shadcn-ui Select/Slider and Button components. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire the ExportPanel into the single-page editor so downloads always reflect the currently applied crop/transforms/adjustments."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Add optional Internet Identity sign-in UI and allow saving/listing/loading recent edit sessions as metadata via the existing backend interface.",
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and sign out",
+        "After signing in, user can save an ‘edit preset/session’ record containing at least: createdAt timestamp and the adjustment/transform settings used",
+        "User can view a list of their saved edit sessions and load one to re-apply settings to the current image",
+        "Backend enforces per-user separation so one user cannot read another user’s saved sessions"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/auth/LoginButton.tsx",
+          "operation": "create",
+          "description": "Add a login/logout button using the selected authorization component’s frontend guidance (Internet Identity via useInternetIdentity), and clear React Query cached data on logout. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/components/auth/ProfileSetupDialog.tsx",
+          "operation": "create",
+          "description": "Implement a first-login profile setup dialog that asks for a display name (English UI) and saves it via backend getCallerUserProfile/saveCallerUserProfile; use shadcn-ui Dialog, Input, and Button for consistent UX. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/integrations/backend/hooks/useUserProfile.ts",
+          "operation": "create",
+          "description": "Create React Query hooks to fetch and save the caller user profile via useActor + backend methods, following the selected authorization component’s guidance to avoid profile modal flash. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/integrations/backend/hooks/useEditSessions.ts",
+          "operation": "create",
+          "description": "Create React Query hooks for listing recent edits and saving edit metadata (saveEditMetadata/getRecentEdits) using the backendInterface types; handle authorization failures with clear English messages. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/editor/utils/serializeSettings.ts",
+          "operation": "create",
+          "description": "Implement serialization/deserialization of the current editing settings to a string suitable for saving as metadata, and re-applying settings onto the current image when a saved session is loaded."
+        },
+        {
+          "path": "frontend/src/editor/components/EditSessionsPanel.tsx",
+          "operation": "create",
+          "description": "Add a panel that (when signed in) shows saved sessions with timestamps, supports Save Current Settings, and Load to re-apply settings to the current image; use shadcn-ui components for list/actions. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire LoginButton + ProfileSetupDialog + EditSessionsPanel into the header/tools area while keeping the editor usable without sign-in (sign-in required only for saving/listing)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Apply a coherent creative theme (non blue/purple dominant) and ensure all UI text is English.",
+      "acceptanceCriteria": [
+        "App has a consistent visual style across header, editor panel, buttons, sliders, and dialogs",
+        "No default blue/purple theme dominates the UI (unless used only as a minor accent)",
+        "All labels, helper text, and error messages are in English"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/index.css",
+          "operation": "modify",
+          "description": "Adjust global design tokens (CSS variables) to a warm gray + charcoal base with creative accent colors that avoid a blue/purple-dominant palette; ensure consistent typography and spacing defaults."
+        },
+        {
+          "path": "frontend/tailwind.config.js",
+          "operation": "modify",
+          "description": "Extend theme tokens as needed (e.g., subtle shadows, spacing, and any additional semantic colors) to support the photo-editor look without introducing a default blue/purple palette."
+        },
+        {
+          "path": "frontend/src/editor/copy/uiText.ts",
+          "operation": "create",
+          "description": "Centralize user-facing English strings (labels, helper text, and error messages) to ensure consistency and prevent non-English text from appearing in the UI."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Adopt the centralized English UI text and apply cohesive layout/styling across header, panels, buttons, sliders, and dialogs using composed shadcn-ui components (do not modify frontend/src/components/ui). Verify the component's usage instructions before implementing."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add UX safeguards: loading/processing states, undo/redo, and responsive layout for mobile/desktop.",
+      "acceptanceCriteria": [
+        "User can undo and redo at least the core editing actions (crop, rotate/flip, adjustments)",
+        "UI remains usable on small screens (editor preview visible, tools accessible)",
+        "Show a visible loading/processing indicator if applying an operation takes noticeable time"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/editor/hooks/useUndoRedo.ts",
+          "operation": "create",
+          "description": "Implement undo/redo state management for core actions (crop confirm, rotate, flip, adjustments changes) with bounded history and clear action semantics."
+        },
+        {
+          "path": "frontend/src/editor/hooks/useProcessingIndicator.ts",
+          "operation": "create",
+          "description": "Add a small abstraction to track and display processing/loading state during expensive canvas operations (e.g., debounced re-rendering or export rendering)."
+        },
+        {
+          "path": "frontend/src/editor/components/ProcessingOverlay.tsx",
+          "operation": "create",
+          "description": "Create a visible processing indicator overlay/spinner using shadcn-ui primitives (e.g., Dialog-like overlay styling or composed components) without modifying ui internals. Verify the component's usage instructions before implementing."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Wire undo/redo controls into the toolbar (including keyboard shortcuts if appropriate), show processing indicator when needed, and make the layout responsive (stack panels on mobile, preserve preview visibility)."
+        }
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "summary": "Include required generated static assets (logo + background texture) under frontend/public/assets/generated and render them from the frontend.",
+      "acceptanceCriteria": [
+        "Generated images exist in frontend/public/assets/generated and are referenced by the UI (e.g., logo in header, background texture behind the editor)",
+        "No backend routes are used to serve these images"
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/public/assets/generated/photo-editor-logo.dim_512x512.png",
+          "operation": "create",
+          "description": "Add the generated logo asset file at the exact required path so it can be referenced as a static frontend asset."
+        },
+        {
+          "path": "frontend/public/assets/generated/editor-bg-texture.dim_1600x900.png",
+          "operation": "create",
+          "description": "Add the generated background texture asset file at the exact required path so it can be referenced as a static frontend asset."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Reference the static assets from the UI: render the logo from frontend/public/assets/generated/photo-editor-logo.dim_512x512.png in the header and apply frontend/public/assets/generated/editor-bg-texture.dim_1600x900.png as a subtle background behind the editor area (served as static files, not via backend)."
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-create-a-single-page-photo-editor-ui-that-lets-a-user-upload-an-image-from-their-device-preview-it-and-edit-it-entirely-in-the-browser",
+      "featureTitle": "Create a single-page photo editor UI that lets a user upload an image from their device, preview it, and edit it entirely in the browser.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/editor/types.ts",
+        "frontend/src/editor/utils/fileValidation.ts",
+        "frontend/src/main.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-1"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-core-non-ai-editing-tools-using-a-canvas-based-pipeline-crop-freeform-or-fixed-ratios-rotate-90-steps-flip-horizontal-vertical-and-basic-adjustments-brightness-contrast-saturation-with-a-live-preview",
+      "featureTitle": "Implement core non-AI editing tools using a canvas-based pipeline: crop (freeform or fixed ratios), rotate (90° steps), flip (horizontal/vertical), and basic adjustments (brightness, contrast, saturation) with a live preview.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/editor/components/EditorCanvas.tsx",
+        "frontend/src/editor/components/tools/AdjustmentsPanel.tsx",
+        "frontend/src/editor/components/tools/CropPanel.tsx",
+        "frontend/src/editor/components/tools/TransformPanel.tsx",
+        "frontend/src/editor/hooks/useEditorState.ts",
+        "frontend/src/editor/processing/canvasPipeline.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-export-options-so-the-user-can-download-the-edited-image-to-their-device-with-selectable-format-png-jpeg-and-quality-control-for-jpeg",
+      "featureTitle": "Add export options so the user can download the edited image to their device with selectable format (PNG/JPEG) and quality control for JPEG.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/editor/components/ExportPanel.tsx",
+        "frontend/src/editor/utils/exportImage.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-an-optional-internet-identity-sign-in-and-a-simple-backend-canister-api-to-save-and-list-a-user-s-recent-edits-as-metadata-not-the-full-image-bytes-including-timestamps-and-editing-settings-used",
+      "featureTitle": "Add an optional Internet Identity sign-in and a simple backend canister API to save and list a user’s recent edits as metadata (not the full image bytes), including timestamps and editing settings used.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/components/auth/LoginButton.tsx",
+        "frontend/src/components/auth/ProfileSetupDialog.tsx",
+        "frontend/src/editor/components/EditSessionsPanel.tsx",
+        "frontend/src/editor/utils/serializeSettings.ts",
+        "frontend/src/integrations/backend/hooks/useEditSessions.ts",
+        "frontend/src/integrations/backend/hooks/useUserProfile.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-apply-a-coherent-creative-visual-theme-across-the-app-colors-typography-spacing-component-styling-suitable-for-a-photo-editing-tool-avoiding-a-blue-purple-default-palette-and-keep-all-user-facing-ui-text-in-english",
+      "featureTitle": "Apply a coherent, creative visual theme across the app (colors, typography, spacing, component styling) suitable for a photo-editing tool, avoiding a blue/purple default palette, and keep all user-facing UI text in English.",
+      "files": [
+        "frontend/index.css",
+        "frontend/src/App.tsx",
+        "frontend/src/editor/copy/uiText.ts",
+        "frontend/tailwind.config.js"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-basic-ux-safeguards-loading-states-for-image-processing-clear-undo-redo-for-editing-actions-and-responsive-layout-so-the-editor-works-on-mobile-and-desktop",
+      "featureTitle": "Add basic UX safeguards: loading states for image processing, clear undo/redo for editing actions, and responsive layout so the editor works on mobile and desktop.",
+      "files": [
+        "frontend/src/App.tsx",
+        "frontend/src/editor/components/ProcessingOverlay.tsx",
+        "frontend/src/editor/hooks/useProcessingIndicator.ts",
+        "frontend/src/editor/hooks/useUndoRedo.ts"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-generate-and-include-required-static-visual-assets-logo-and-a-subtle-background-texture-and-render-them-from-the-frontend-as-static-files-under-frontend-public-assets-generated",
+      "featureTitle": "Generate and include required static visual assets (logo and a subtle background texture) and render them from the frontend as static files under frontend/public/assets/generated.",
+      "files": [
+        "frontend/src/App.tsx"
+      ],
+      "components": [
+        "authorization@4.0.0",
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
+      ],
+      "confidence": "high"
+    }
+  ]
+}

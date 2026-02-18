@@ -1,0 +1,147 @@
+{
+  "kind": "build_request",
+  "title": "Photo upload and in-browser photo editor website",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-1",
+      "text": "Create a single-page photo editor UI that lets a user upload an image from their device, preview it, and edit it entirely in the browser.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "मुझे एक ऐसी वेपसाइड बनानी है जिसमें लोग अपनी फोटो को एड़ेट कर सकें"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can upload a JPG/PNG/WebP image via file picker and see a preview",
+        "If the user uploads an unsupported file type, show an English error message and do not crash",
+        "Provide a clear ‘Reset’ action that restores the image to its original state"
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Implement core non-AI editing tools using a canvas-based pipeline: crop (freeform or fixed ratios), rotate (90° steps), flip (horizontal/vertical), and basic adjustments (brightness, contrast, saturation) with a live preview.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ],
+        "quotes": [
+          "लोग अपनी फोटो को एड़ेट कर सकें"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can crop and confirm the crop, and the preview updates to the cropped result",
+        "User can rotate left/right by 90° and flip horizontally/vertically",
+        "User can adjust brightness/contrast/saturation with sliders and see changes immediately",
+        "Edits can be applied in combination (e.g., crop + rotate + brightness)"
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Add export options so the user can download the edited image to their device with selectable format (PNG/JPEG) and quality control for JPEG.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can download the edited image as PNG",
+        "User can download the edited image as JPEG with a quality slider (or preset) that changes output size/quality",
+        "Downloaded file reflects all applied edits"
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Add an optional Internet Identity sign-in and a simple backend canister API to save and list a user’s recent edits as metadata (not the full image bytes), including timestamps and editing settings used.",
+      "target": "both",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can sign in with Internet Identity and sign out",
+        "After signing in, user can save an ‘edit preset/session’ record containing at least: createdAt timestamp and the adjustment/transform settings used",
+        "User can view a list of their saved edit sessions and load one to re-apply settings to the current image",
+        "Backend enforces per-user separation so one user cannot read another user’s saved sessions"
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Apply a coherent, creative visual theme across the app (colors, typography, spacing, component styling) suitable for a photo-editing tool, avoiding a blue/purple default palette, and keep all user-facing UI text in English.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "App has a consistent visual style across header, editor panel, buttons, sliders, and dialogs",
+        "No default blue/purple theme dominates the UI (unless used only as a minor accent)",
+        "All labels, helper text, and error messages are in English"
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add basic UX safeguards: loading states for image processing, clear undo/redo for editing actions, and responsive layout so the editor works on mobile and desktop.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "User can undo and redo at least the core editing actions (crop, rotate/flip, adjustments)",
+        "UI remains usable on small screens (editor preview visible, tools accessible)",
+        "Show a visible loading/processing indicator if applying an operation takes noticeable time"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Generate and include required static visual assets (logo and a subtle background texture) and render them from the frontend as static files under frontend/public/assets/generated.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-2"
+        ]
+      },
+      "acceptanceCriteria": [
+        "Generated images exist in frontend/public/assets/generated and are referenced by the UI (e.g., logo in header, background texture behind the editor)",
+        "No backend routes are used to serve these images"
+      ]
+    }
+  ],
+  "constraints": [
+    "Use only the provided stack: Motoko single-actor backend; React + TypeScript + Tailwind + React Query frontend.",
+    "Do not modify files under frontend/src/components/ui or any immutable paths defined by the platform; compose those components instead.",
+    "Do not use external databases or third-party auth providers; only Internet Identity is allowed for authentication.",
+    "Do not implement AI/LLM-based photo editing or call external AI services."
+  ],
+  "nonGoals": [
+    "Advanced professional editing features (layers, masks, content-aware fill, liquify).",
+    "Real-time collaboration or chat.",
+    "Cloud storage of full-resolution image binaries on the backend (store metadata only)."
+  ],
+  "imageRequirements": {
+    "required": [
+      "Minimal camera/aperture style logo mark, flat vector, dark-on-light and light-on-dark friendly (photo-editor-logo.dim_512x512.png)",
+      "Subtle seamless grain/paper texture background, neutral warm gray palette, low contrast (editor-bg-texture.dim_1600x900.png)"
+    ],
+    "edits": []
+  },
+  "userProfileUpdate": {
+    "goalsToAdd": [],
+    "goalsToRemove": [],
+    "preferencesToAdd": [],
+    "preferencesToRemove": [],
+    "miscToAdd": [],
+    "miscToRemove": [],
+    "fieldsToSet": {},
+    "fieldsToDelete": []
+  }
+}

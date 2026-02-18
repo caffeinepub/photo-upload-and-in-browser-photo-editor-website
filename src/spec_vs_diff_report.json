@@ -1,0 +1,77 @@
+{
+  "kind": "spec_vs_diff_report",
+  "version": "1.0",
+  "generatedAt": "2026-02-16T09:40:01.237Z",
+  "summary": "The diff adds a canvas-based in-browser editor (adjustments/transform/crop pipeline), export to PNG/JPEG with JPEG quality, undo/redo hooks, and backend endpoints for per-user edit metadata. However, required generated static assets are not shown, and crop appears limited to ratio-based center crops rather than true freeform selection. Some additional user-profile/auth UI/backend endpoints are introduced beyond the requested edit-session metadata feature.",
+  "missing_requirements": [
+    {
+      "id": "REQ-2",
+      "requirement": "Crop tool should support freeform cropping (or fixed ratios) with user-defined crop rectangle and confirm/apply to preview.",
+      "reason": "CropPanel only computes a centered crop rectangle based on selected aspect ratios; there is no UI or logic for selecting an arbitrary/freeform crop region.",
+      "evidence": [
+        "frontend/src/editor/components/tools/CropPanel.tsx"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "requirement": "Generate and include required static visual assets (logo and subtle background texture) under frontend/public/assets/generated and reference them in the UI.",
+      "reason": "No files under frontend/public/assets/generated are included in the diff summary; the required PNG assets are not evidenced.",
+      "evidence": [
+        "File diff summary shows no added files under frontend/public/assets/generated"
+      ]
+    }
+  ],
+  "hallucinated_features": [
+    {
+      "description": "User profile storage and profile setup flow (name field) in backend and frontend.",
+      "reason": "REQ-4 requests saving/listing recent edit-session metadata; it does not request user profile creation/storage (name) or profile setup dialogs/endpoints.",
+      "evidence": [
+        "backend/main.mo (UserProfile type, getCallerUserProfile/saveCallerUserProfile/getUserProfile)",
+        "frontend/src/components/auth/ProfileSetupDialog.tsx"
+      ]
+    },
+    {
+      "description": "File size validation limit (50MB) for uploads.",
+      "reason": "REQ-1 only specifies supported types and error handling for unsupported types; it does not specify a maximum file size constraint.",
+      "evidence": [
+        "frontend/src/editor/utils/fileValidation.ts"
+      ]
+    }
+  ],
+  "confidence": 0.74,
+  "changed_files": [
+    "all_files_summary.json",
+    "backend/main.mo",
+    "frontend-file-summaries.txt",
+    "frontend/index.css",
+    "frontend/index.html",
+    "frontend/src/App.tsx",
+    "frontend/src/components/auth/LoginButton.tsx",
+    "frontend/src/components/auth/ProfileSetupDialog.tsx",
+    "frontend/src/editor/components/EditSessionsPanel.tsx",
+    "frontend/src/editor/components/EditorCanvas.tsx",
+    "frontend/src/editor/components/ExportPanel.tsx",
+    "frontend/src/editor/components/ProcessingOverlay.tsx",
+    "frontend/src/editor/components/tools/AdjustmentsPanel.tsx",
+    "frontend/src/editor/components/tools/CropPanel.tsx",
+    "frontend/src/editor/components/tools/TransformPanel.tsx",
+    "frontend/src/editor/copy/uiText.ts",
+    "frontend/src/editor/hooks/useEditorState.ts",
+    "frontend/src/editor/hooks/useProcessingIndicator.ts",
+    "frontend/src/editor/hooks/useUndoRedo.ts",
+    "frontend/src/editor/processing/canvasPipeline.ts",
+    "frontend/src/editor/types.ts",
+    "frontend/src/editor/utils/exportImage.ts",
+    "frontend/src/editor/utils/fileValidation.ts",
+    "frontend/src/editor/utils/serializeSettings.ts",
+    "frontend/src/hooks/useActor.ts",
+    "frontend/src/hooks/useInternetIdentity.ts",
+    "frontend/src/index.css",
+    "frontend/src/integrations/backend/hooks/useEditSessions.ts",
+    "frontend/src/integrations/backend/hooks/useUserProfile.ts",
+    "frontend/src/main.tsx",
+    "frontend/src/utils/urlParams.ts",
+    "frontend/tailwind.config.js",
+    "project_state.json"
+  ]
+}
